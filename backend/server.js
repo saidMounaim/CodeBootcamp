@@ -18,6 +18,8 @@ if (process.env.NODE_ENV === 'developement') {
 	app.use(morgan('dev'));
 }
 
+app.use(express.json());
+
 app.get('/', (req, res) => {
 	res.status(200).json({ message: 'Welcome To Backend Dev Bootcamp' });
 });

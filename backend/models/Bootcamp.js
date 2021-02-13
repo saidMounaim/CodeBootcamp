@@ -32,15 +32,14 @@ const BootcampShema = new mongoose.Schema({
 			'Please use a valid Email',
 		],
 	},
-	adresse: {
+	address: {
 		type: String,
-		required: [true, 'Please add an adresse'],
+		required: [true, 'Please add an address'],
 	},
 	location: {
 		type: {
 			type: String, // Don't do `{ location: { type: String } }`
 			enum: ['Point'], // 'location.type' must be 'Point'
-			required: true,
 		},
 		coordinates: {
 			type: [Number],
@@ -90,6 +89,6 @@ const BootcampShema = new mongoose.Schema({
 	},
 });
 
-const Bootcamp = mongoose.model(BootcampShema, 'Bootcamp');
+const Bootcamp = mongoose.model('Bootcamp', BootcampShema);
 
 export default Bootcamp;
