@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
 import connectDB from './config/db.js';
+import { errorHandler, notFound } from './middleware/ErrorMiddleware.js';
 
 // ROUTES FILES
 import bootcampRoutes from './routes/bootcampRoutes.js';
@@ -26,6 +27,9 @@ app.get('/', (req, res) => {
 
 // BOOTCAMPS ROUTER
 app.use('/api/v1/bootcamps', bootcampRoutes);
+
+app.use(notFound);
+app.use(errorHandler);
 
 const PORT = 5000 || process.env.PORT;
 
