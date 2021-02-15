@@ -5,7 +5,9 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "server": "nodemon backend/server.js"
+    "server": "nodemon backend/server.js",
+    "insertBootcamps": "node backend/seeder.js -i",
+    "deleteBootcamps": "node backend/seeder.js -d"
   },
   "keywords": [],
   "author": "Said Mounaim",
