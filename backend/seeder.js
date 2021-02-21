@@ -8,7 +8,7 @@ connectDB();
 const importBootcamps = async () => {
 	try {
 		await Bootcamp.deleteMany();
-		await Bootcamp.insertMany(bootcamps);
+		await Bootcamp.create(bootcamps);
 	} catch (error) {
 		console.log(error.message);
 	}
