@@ -6,7 +6,15 @@ import geocoder from '../utils/geocoder.js';
 // @METHOD GET
 // @ROUTE /api/v1/bootcamps
 export const getBootcamps = asyncHandler(async (req, res) => {
-	const allBotcamps = await Bootcamp.find();
+	let query;
+
+	let queryStr = JSON.stringify(req.query);
+
+	queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, (match) => `$${match}`);
+
+	query = Bootcamp.find(JSON.parse(queryStr));
+
+	const allBotcamps = await query;
 	res.json({ success: true, count: allBotcamps.length, data: allBotcamps });
 });
 
