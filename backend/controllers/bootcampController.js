@@ -8,11 +8,31 @@ import geocoder from '../utils/geocoder.js';
 export const getBootcamps = asyncHandler(async (req, res) => {
 	let query;
 
-	let queryStr = JSON.stringify(req.query);
+	const reqQuery = { ...req.query };
+
+	const removeFields = ['select', 'sort'];
+
+	removeFields.forEach((param) => delete reqQuery[param]);
+
+	let queryStr = JSON.stringify(reqQuery);
 
 	queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, (match) => `$${match}`);
 
 	query = Bootcamp.find(JSON.parse(queryStr));
+
+	console.log(reqQuery);
+
+	if (req.query.select) {
+		const fields = req.query.select.split(',').join(' ');
+		query = query.select(fields);
+	}
+
+	if (req.query.sort) {
+		const sortBy = req.query.sort.split(',').join(' ');
+		query = query.sort(sortBy);
+	} else {
+		query = query.sort('-createdAt');
+	}
 
 	const allBotcamps = await query;
 	res.json({ success: true, count: allBotcamps.length, data: allBotcamps });
