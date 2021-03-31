@@ -6,6 +6,7 @@ import { errorHandler, notFound } from './middleware/ErrorMiddleware.js';
 
 // ROUTES FILES
 import bootcampRoutes from './routes/bootcampRoutes.js';
+import courseRoutes from './routes/courseRoutes.js';
 
 // Load env vars
 dotenv.config();
@@ -27,6 +28,7 @@ app.get('/', (req, res) => {
 
 // BOOTCAMPS ROUTER
 app.use('/api/v1/bootcamps', bootcampRoutes);
+app.use('/api/v1/courses', courseRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
