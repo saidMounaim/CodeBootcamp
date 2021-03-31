@@ -1,4 +1,4 @@
-const couses = [
+const courses = [
 	{
 		_id: '5d725a4a7b292f5f8ceff789',
 		title: 'Front End Web Development',

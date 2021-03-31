@@ -20,8 +20,6 @@ export const getBootcamps = asyncHandler(async (req, res) => {
 
 	query = Bootcamp.find(JSON.parse(queryStr));
 
-	console.log(reqQuery);
-
 	if (req.query.select) {
 		const fields = req.query.select.split(',').join(' ');
 		query = query.select(fields);
@@ -35,7 +33,7 @@ export const getBootcamps = asyncHandler(async (req, res) => {
 	}
 
 	const page = parseInt(req.query.page, 10) || 1;
-	const limit = parseInt(req.query.limit, 10) || 100;
+	const limit = parseInt(req.query.limit, 10) || 25;
 	const startIndex = (page - 1) * limit;
 	const endIndex = page * limit;
 	const total = await Bootcamp.countDocuments();
@@ -59,6 +57,7 @@ export const getBootcamps = asyncHandler(async (req, res) => {
 	}
 
 	const allBotcamps = await query;
+
 	res.json({ success: true, count: allBotcamps.length, paginations, data: allBotcamps });
 });
 
