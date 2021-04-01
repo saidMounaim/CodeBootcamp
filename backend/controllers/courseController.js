@@ -4,7 +4,7 @@ import Course from '../models/Course.js';
 // @DESC Get All Courses
 // @METHOD GET
 // @ROUTE /api/v1/courses
-// @ROUTE /api/v1/bootcamp/:bootcampId/courses
+// @ROUTE /api/v1/bootcamps/:bootcampId/courses
 const getCourses = asyncHandler(async (req, res) => {
 	let query;
 
