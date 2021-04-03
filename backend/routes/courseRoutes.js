@@ -1,8 +1,9 @@
 import express from 'express';
-import { getCourses } from '../controllers/courseController.js';
+import { getCourses, getCourse, createCourse } from '../controllers/courseController.js';
 
 const router = express.Router({ mergeParams: true });
 
-router.get('/', getCourses);
+router.route('/').get(getCourses).post(createCourse);
+router.route('/:id').get(getCourse);
 
 export default router;
