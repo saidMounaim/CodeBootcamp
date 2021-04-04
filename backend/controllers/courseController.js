@@ -54,4 +54,36 @@ const createCourse = asyncHandler(async (req, res) => {
 	res.status(201).json({ success: true, data: course });
 });
 
-export { getCourses, getCourse, createCourse };
+//@DESC Update course
+//@METHOD PUT
+//@ROUTE /api/v1/courses/:id
+const updateCourse = asyncHandler(async (req, res) => {
+	let course = await Course.findById(req.params.id);
+	if (!course) {
+		throw new Error('Course Not Found');
+	}
+
+	course = await Course.findByIdAndUpdate(req.params.id, req.body, {
+		new: true,
+		runValidators: true,
+	});
+
+	res.status(201).json({ success: true, data: course });
+});
+
+//@DESC Delete Course
+//@METHOD DELETE
+//@ROUTE /api/v1/courses/:id
+const deleteCourse = asyncHandler(async (req, res) => {
+	let course = await Course.findById(req.params.id);
+
+	if (!course) {
+		throw new Error('Course not found');
+	}
+
+	await course.remove();
+
+	res.status(201).json({ success: true, data: {} });
+});
+
+export { getCourses, getCourse, createCourse, updateCourse, deleteCourse };
