@@ -3,7 +3,6 @@ import bootcamps from './data/bootcamps.js';
 import Course from './models/Course.js';
 import courses from './data/courses.js';
 import connectDB from './config/db.js';
-import dotenv from 'dotenv';
 
 connectDB();
 
@@ -12,7 +11,7 @@ const importData = async () => {
 		await Bootcamp.deleteMany();
 		await Course.deleteMany();
 
-		await Course.create(courses);
+		// await Course.create(courses);
 		await Bootcamp.create(bootcamps);
 	} catch (error) {
 		console.log(error.message);

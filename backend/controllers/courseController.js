@@ -75,7 +75,7 @@ const updateCourse = asyncHandler(async (req, res) => {
 //@METHOD DELETE
 //@ROUTE /api/v1/courses/:id
 const deleteCourse = asyncHandler(async (req, res) => {
-	let course = await Course.findById(req.params.id);
+	let course = Course.findById(req.params.id);
 
 	if (!course) {
 		throw new Error('Course not found');
