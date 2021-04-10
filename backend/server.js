@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import morgan from 'morgan';
 import connectDB from './config/db.js';
 import { errorHandler, notFound } from './middleware/ErrorMiddleware.js';
+import fileUpload from 'express-fileupload';
 
 // ROUTES FILES
 import bootcampRoutes from './routes/bootcampRoutes.js';
@@ -19,6 +20,8 @@ const app = express();
 if (process.env.NODE_ENV === 'developement') {
 	app.use(morgan('dev'));
 }
+
+app.use(fileUpload());
 
 app.use(express.json());
 

@@ -11,7 +11,7 @@ const importData = async () => {
 		await Bootcamp.deleteMany();
 		await Course.deleteMany();
 
-		// await Course.create(courses);
+		await Course.create(courses);
 		await Bootcamp.create(bootcamps);
 	} catch (error) {
 		console.log(error.message);
