@@ -7,20 +7,12 @@ import Bootcamp from '../models/Bootcamp.js';
 // @ROUTE /api/v1/courses
 // @ROUTE /api/v1/bootcamps/:bootcampId/courses
 const getCourses = asyncHandler(async (req, res) => {
-	let query;
-
 	if (req.params.bootcampId) {
-		query = Course.find({ bootcamp: req.params.bootcampId });
+		const courses = await Course.find({ bootcamp: req.params.bootcampId });
+		return res.status(201).json({ success: true, count: courses.length, data: courses });
 	} else {
-		query = Course.find({}).populate({
-			path: 'bootcamp',
-			select: 'name description',
-		});
+		res.status(201).json(res.AdvancedResults);
 	}
-
-	const courses = await query;
-
-	res.status(201).json({ success: true, count: courses.length, data: courses });
 });
 
 //@DESC Get Single Course
