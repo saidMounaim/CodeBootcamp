@@ -1,5 +1,6 @@
 import asyncHandler from 'express-async-handler';
 import User from '../models/User.js';
+import generateToken from '../utils/generateToken.js';
 
 //@DESC Register
 //@ROUTE /api/v1/auth/register
@@ -13,7 +14,9 @@ const register = asyncHandler(async (req, res) => {
 		password,
 	});
 
-	res.status(201).json({ success: true, data: user });
+	const token = generateToken(user._id);
+
+	res.status(201).json({ success: true, token });
 });
 
 export { register };
