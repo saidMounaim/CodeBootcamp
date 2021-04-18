@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
 
 const UserShema = mongoose.Schema({
 	name: {
@@ -35,6 +36,12 @@ const UserShema = mongoose.Schema({
 		type: Date,
 		default: Date.now,
 	},
+});
+
+UserShema.pre('save', function (next) {
+	const salt = bcrypt.genSaltSync(10);
+	this.password = bcrypt.hashSync(this.password, salt);
+	next();
 });
 
 const User = mongoose.model('User', UserShema);
