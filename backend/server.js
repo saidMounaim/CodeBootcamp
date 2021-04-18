@@ -8,6 +8,7 @@ import fileUpload from 'express-fileupload';
 // ROUTES FILES
 import bootcampRoutes from './routes/bootcampRoutes.js';
 import courseRoutes from './routes/courseRoutes.js';
+import AuthRoutes from './routes/AuthRoutes.js';
 
 // Load env vars
 dotenv.config();
@@ -29,9 +30,10 @@ app.get('/', (req, res) => {
 	res.status(200).json({ message: 'Welcome To Backend Dev Bootcamp' });
 });
 
-// BOOTCAMPS ROUTER
+// All Router
 app.use('/api/v1/bootcamps', bootcampRoutes);
 app.use('/api/v1/courses', courseRoutes);
+app.use('/api/v1/auth', AuthRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
