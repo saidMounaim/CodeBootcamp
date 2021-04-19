@@ -4,6 +4,7 @@ import morgan from 'morgan';
 import connectDB from './config/db.js';
 import { errorHandler, notFound } from './middleware/ErrorMiddleware.js';
 import fileUpload from 'express-fileupload';
+import cookieParser from 'cookie-parser';
 
 // ROUTES FILES
 import bootcampRoutes from './routes/bootcampRoutes.js';
@@ -22,9 +23,11 @@ if (process.env.NODE_ENV === 'developement') {
 	app.use(morgan('dev'));
 }
 
-app.use(fileUpload());
-
 app.use(express.json());
+
+app.use(cookieParser());
+
+app.use(fileUpload());
 
 app.get('/', (req, res) => {
 	res.status(200).json({ message: 'Welcome To Backend Dev Bootcamp' });

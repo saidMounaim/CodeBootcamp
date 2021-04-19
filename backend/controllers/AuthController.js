@@ -15,9 +15,7 @@ const register = asyncHandler(async (req, res) => {
 		password,
 	});
 
-	const token = generateToken(user._id);
-
-	res.status(201).json({ success: true, token });
+	sendTokenToResponse(user, 201, res);
 });
 
 //@DESC Login
@@ -45,9 +43,22 @@ const login = asyncHandler(async (req, res) => {
 		throw new Error('Invalid password');
 	}
 
-	const token = generateToken(user._id);
-
-	res.status(201).json({ success: true, token });
+	sendTokenToResponse(user, 201, res);
 });
+
+const sendTokenToResponse = (user, statusCode, res) => {
+	const token = generateToken(user);
+
+	let options = {
+		expires: new Date(Date.now() + process.env.JWT_COOKE_EXPIRE * 24 * 60 * 60 * 1000),
+		httpOnly: true,
+	};
+
+	if (process.env.NODE_ENV === 'production') {
+		options.secure = true;
+	}
+
+	res.status(statusCode).cookie('Token', token, options).json({ success: true, token });
+};
 
 export { register, login };
