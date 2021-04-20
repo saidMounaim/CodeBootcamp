@@ -46,6 +46,20 @@ const login = asyncHandler(async (req, res) => {
 	sendTokenToResponse(user, 201, res);
 });
 
+//@DESC Get logged User
+//@ROUTE /api/v1/auth/me
+//@METHOD GET
+const getMe = asyncHandler(async (req, res) => {
+	const user = await User.findById(req.user._id);
+
+	if (!user) {
+		res.status(404);
+		throw new Error('User not found');
+	}
+
+	res.status(201).json({ success: true, data: user });
+});
+
 const sendTokenToResponse = (user, statusCode, res) => {
 	const token = generateToken(user);
 
@@ -61,4 +75,4 @@ const sendTokenToResponse = (user, statusCode, res) => {
 	res.status(statusCode).cookie('Token', token, options).json({ success: true, token });
 };
 
-export { register, login };
+export { register, login, getMe };
