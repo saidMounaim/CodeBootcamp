@@ -6,6 +6,8 @@ import AdvanceResults from '../middleware/AdvancedResults.js';
 
 const router = express.Router({ mergeParams: true });
 
+import { ProtectMiddleware, AuthorizeMiddleware } from '../middleware/ProtectMiddleware.js';
+
 router
 	.route('/')
 	.get(
@@ -15,7 +17,11 @@ router
 		}),
 		getCourses
 	)
-	.post(createCourse);
-router.route('/:id').get(getCourse).put(updateCourse).delete(deleteCourse);
+	.post(ProtectMiddleware, AuthorizeMiddleware('admin', 'publisher'), createCourse);
+router
+	.route('/:id')
+	.get(getCourse)
+	.put(ProtectMiddleware, AuthorizeMiddleware('admin', 'publisher'), updateCourse)
+	.delete(ProtectMiddleware, AuthorizeMiddleware('admin', 'publisher'), deleteCourse);
 
 export default router;

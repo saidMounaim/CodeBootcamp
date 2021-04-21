@@ -23,3 +23,13 @@ export const ProtectMiddleware = asyncHandler(async (req, res, next) => {
 		throw new Error(error.message);
 	}
 });
+
+export const AuthorizeMiddleware = (...roles) => {
+	return (req, res, next) => {
+		if (!roles.includes(req.user.role)) {
+			res.status(401);
+			throw new Error('User role not authorize to access this route');
+		}
+		next();
+	};
+};
