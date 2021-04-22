@@ -34,11 +34,17 @@ const getCourse = asyncHandler(async (req, res) => {
 //@ROUTE /api/v1/bootcamps/:bootcampId/courses
 const createCourse = asyncHandler(async (req, res) => {
 	req.body.bootcamp = req.params.bootcampId;
+	req.body.user = req.user.id;
 
 	const bootcamp = await Bootcamp.findById(req.params.bootcampId);
 
 	if (!bootcamp) {
 		throw new Error('Bootcamp Not Found');
+	}
+
+	if (bootcamp.user.toString() !== req.user.id && req.user.role !== 'admin') {
+		res.status(401);
+		throw new Error('user role not authorize to add course to this bootcamp');
 	}
 
 	const course = await Course.create(req.body);
@@ -53,6 +59,11 @@ const updateCourse = asyncHandler(async (req, res) => {
 	let course = await Course.findById(req.params.id);
 	if (!course) {
 		throw new Error('Course Not Found');
+	}
+
+	if (course.user.toString() !== req.user.id && req.user.role !== 'admin') {
+		res.status(401);
+		throw new Error('user role not authorize to update this course');
 	}
 
 	course = await Course.findByIdAndUpdate(req.params.id, req.body, {
@@ -71,6 +82,11 @@ const deleteCourse = asyncHandler(async (req, res) => {
 
 	if (!course) {
 		throw new Error('Course not found');
+	}
+
+	if (course.user.toString() !== req.user.id && req.user.role !== 'admin') {
+		res.status(401);
+		throw new Error('user role not authorize to delete this course');
 	}
 
 	await course.remove();
