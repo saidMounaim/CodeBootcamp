@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 
@@ -39,10 +40,24 @@ const UserShema = mongoose.Schema({
 });
 
 UserShema.pre('save', function (next) {
+	if (!this.isModified('password')) {
+		next();
+	}
+
 	const salt = bcrypt.genSaltSync(10);
 	this.password = bcrypt.hashSync(this.password, salt);
 	next();
 });
+
+UserShema.methods.getResetPasswordToken = function () {
+	const resetToken = crypto.randomBytes(20).toString('hex');
+
+	this.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+
+	this.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
+
+	return resetToken;
+};
 
 const User = mongoose.model('User', UserShema);
 

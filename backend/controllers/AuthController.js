@@ -60,6 +60,24 @@ const getMe = asyncHandler(async (req, res) => {
 	res.status(201).json({ success: true, data: user });
 });
 
+//@DESC Forgot password
+//@ROUTE /api/v1/auth/forgotpassword
+//@METHOD POST
+const forgotPassword = asyncHandler(async (req, res) => {
+	const user = await User.findOne({ email: req.body.email });
+
+	if (!user) {
+		res.status(404);
+		throw new Error('User Not Found');
+	}
+
+	const resetToken = user.getResetPasswordToken();
+
+	await user.save({ validateBeforeSave: false });
+
+	res.status(201).json({ success: true, data: user });
+});
+
 const sendTokenToResponse = (user, statusCode, res) => {
 	const token = generateToken(user);
 
@@ -75,4 +93,4 @@ const sendTokenToResponse = (user, statusCode, res) => {
 	res.status(statusCode).cookie('Token', token, options).json({ success: true, token });
 };
 
-export { register, login, getMe };
+export { register, login, getMe, forgotPassword };
