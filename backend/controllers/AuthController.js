@@ -2,6 +2,7 @@ import asyncHandler from 'express-async-handler';
 import User from '../models/User.js';
 import generateToken from '../utils/generateToken.js';
 import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
 import sendEmail from '../utils/SendEmail.js';
 
 //@DESC Register
@@ -76,7 +77,7 @@ const forgotPassword = asyncHandler(async (req, res) => {
 
 	await user.save({ validateBeforeSave: false });
 
-	const resetUrl = `${req.protocol}://${req.get('host')}/api/v1/resetpassword/${resetToken}`;
+	const resetUrl = `${req.protocol}://${req.get('host')}/api/v1/auth/resetpassword/${resetToken}`;
 
 	const message = `
 		you requested to reset your password,<br /> 
@@ -105,6 +106,31 @@ const forgotPassword = asyncHandler(async (req, res) => {
 	res.status(201).json({ success: true, data: user });
 });
 
+//@DESC Reset password
+//@ROUTE /api/v1/auth/resetpassword/:resettoken
+//@METHOD PUT
+const resetPassword = asyncHandler(async (req, res) => {
+	const resetPasswordToken = crypto.createHash('sha256').update(req.params.resettoken).digest('hex');
+
+	const user = await User.findOne({
+		resetPasswordToken,
+		resetPasswordExpire: { $gt: Date.now() },
+	});
+
+	if (!user) {
+		res.status(401);
+		throw new Error('Invalid token');
+	}
+
+	user.password = req.body.password;
+	user.resetPasswordToken = undefined;
+	user.resetPasswordExpire = undefined;
+
+	await user.save();
+
+	sendTokenToResponse(user, 201, res);
+});
+
 const sendTokenToResponse = (user, statusCode, res) => {
 	const token = generateToken(user);
 
@@ -120,4 +146,4 @@ const sendTokenToResponse = (user, statusCode, res) => {
 	res.status(statusCode).cookie('Token', token, options).json({ success: true, token });
 };
 
-export { register, login, getMe, forgotPassword };
+export { register, login, getMe, forgotPassword, resetPassword };
