@@ -62,6 +62,40 @@ const getMe = asyncHandler(async (req, res) => {
 	res.status(201).json({ success: true, data: user });
 });
 
+//@DESC Update User Details
+//@ROUTE /api/v1/auth/updatedetails
+//@METHOD PUT
+const updateDetails = asyncHandler(async (req, res) => {
+	const fieldToUpdate = {
+		name: req.body.name,
+		email: req.body.email,
+	};
+
+	const user = await User.findByIdAndUpdate(req.user.id, fieldToUpdate, {
+		new: true,
+		runValidators: true,
+	});
+
+	res.status(201).json({ success: true, data: user });
+});
+
+//@DESC Update User Password
+//@ROUTE /api/v1/auth/updatepassword
+//@METHOD PUT
+const updatePassword = asyncHandler(async (req, res) => {
+	const user = await User.findById(req.user.id).select('+password');
+
+	if (!bcrypt.compareSync(req.body.currentPassword, user.password)) {
+		res.status(401);
+		throw new Error('Current password invalid');
+	}
+
+	user.password = req.body.newPassword;
+	await user.save();
+
+	sendTokenToResponse(user, 201, res);
+});
+
 //@DESC Forgot password
 //@ROUTE /api/v1/auth/forgotpassword
 //@METHOD POST
@@ -146,4 +180,4 @@ const sendTokenToResponse = (user, statusCode, res) => {
 	res.status(statusCode).cookie('Token', token, options).json({ success: true, token });
 };
 
-export { register, login, getMe, forgotPassword, resetPassword };
+export { register, login, getMe, forgotPassword, resetPassword, updateDetails, updatePassword };
