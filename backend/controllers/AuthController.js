@@ -2,6 +2,7 @@ import asyncHandler from 'express-async-handler';
 import User from '../models/User.js';
 import generateToken from '../utils/generateToken.js';
 import bcrypt from 'bcryptjs';
+import sendEmail from '../utils/SendEmail.js';
 
 //@DESC Register
 //@ROUTE /api/v1/auth/register
@@ -74,6 +75,32 @@ const forgotPassword = asyncHandler(async (req, res) => {
 	const resetToken = user.getResetPasswordToken();
 
 	await user.save({ validateBeforeSave: false });
+
+	const resetUrl = `${req.protocol}://${req.get('host')}/api/v1/resetpassword/${resetToken}`;
+
+	const message = `
+		you requested to reset your password,<br /> 
+		please check the link below to reset your password<br />
+		<a href="${resetUrl}" target="_blank" >Reset Password</a>
+	`;
+
+	try {
+		await sendEmail({
+			email: user.email,
+			subject: 'Password Reset Token',
+			message,
+		});
+
+		res.status(201).json({ success: true, message: 'Email Sent' });
+	} catch (error) {
+		user.resetPasswordToken = undefined;
+		user.resetPasswordExpire = undefined;
+
+		await user.save({ validateBeforeSave: false });
+
+		res.status(401);
+		throw new Error('Email could not be sent');
+	}
 
 	res.status(201).json({ success: true, data: user });
 });
