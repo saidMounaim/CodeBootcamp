@@ -5,11 +5,13 @@ import connectDB from './config/db.js';
 import { errorHandler, notFound } from './middleware/ErrorMiddleware.js';
 import fileUpload from 'express-fileupload';
 import cookieParser from 'cookie-parser';
+import { ProtectMiddleware, AuthorizeMiddleware } from './middleware/ProtectMiddleware.js';
 
 // ROUTES FILES
 import bootcampRoutes from './routes/bootcampRoutes.js';
 import courseRoutes from './routes/courseRoutes.js';
 import AuthRoutes from './routes/AuthRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 
 // Load env vars
 dotenv.config();
@@ -37,6 +39,7 @@ app.get('/', (req, res) => {
 app.use('/api/v1/bootcamps', bootcampRoutes);
 app.use('/api/v1/courses', courseRoutes);
 app.use('/api/v1/auth', AuthRoutes);
+app.use('/api/v1/users', ProtectMiddleware, AuthorizeMiddleware('admin'), userRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

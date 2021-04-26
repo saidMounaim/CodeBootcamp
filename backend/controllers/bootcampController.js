@@ -68,12 +68,11 @@ export const updateBootcamps = asyncHandler(async (req, res) => {
 
 // @DESC Delete Bootcamps
 // @METHOD DELETE
-// @ROUTE /api/v1/bootcamps
+// @ROUTE /api/v1/bootcamps/:id
 export const deleteBootcamps = asyncHandler(async (req, res) => {
 	const { id } = req.params;
 
 	const bootcamp = await Bootcamp.findById(id);
-	bootcamp.remove();
 
 	if (!bootcamp) {
 		res.status(404);
@@ -84,6 +83,8 @@ export const deleteBootcamps = asyncHandler(async (req, res) => {
 		res.status(401);
 		throw new Error('user role not authorize to delete this bootcamp');
 	}
+
+	bootcamp.remove();
 
 	res.status(200).json({ success: true, data: {} });
 });
