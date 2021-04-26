@@ -14,12 +14,14 @@ import Bootcamp from '../models/Bootcamp.js';
 import AdvancedResults from '../middleware/AdvancedResults.js';
 
 import courseRoutes from './courseRoutes.js';
+import reviewRoutes from './reviewRoutes.js';
 
 import { ProtectMiddleware, AuthorizeMiddleware } from '../middleware/ProtectMiddleware.js';
 
 const router = express.Router();
 
 router.use('/:bootcampId/courses', courseRoutes);
+router.use('/:bootcampId/reviews', reviewRoutes);
 
 router.route('/radius/:zipcode/:distance').get(getBootcampsRadius);
 router

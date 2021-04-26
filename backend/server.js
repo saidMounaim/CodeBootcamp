@@ -12,6 +12,7 @@ import bootcampRoutes from './routes/bootcampRoutes.js';
 import courseRoutes from './routes/courseRoutes.js';
 import AuthRoutes from './routes/AuthRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import reviewRoutes from './routes/reviewRoutes.js';
 
 // Load env vars
 dotenv.config();
@@ -40,6 +41,7 @@ app.use('/api/v1/bootcamps', bootcampRoutes);
 app.use('/api/v1/courses', courseRoutes);
 app.use('/api/v1/auth', AuthRoutes);
 app.use('/api/v1/users', ProtectMiddleware, AuthorizeMiddleware('admin'), userRoutes);
+app.use('/api/v1/reviews', reviewRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
