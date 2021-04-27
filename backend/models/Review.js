@@ -4,7 +4,6 @@ const ReviewShema = mongoose.Schema({
 	title: {
 		type: String,
 		required: [true, 'Please add a title to bootcamp'],
-		maxlength: 10,
 	},
 
 	text: {
