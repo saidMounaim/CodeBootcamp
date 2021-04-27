@@ -31,6 +31,8 @@ const ReviewShema = mongoose.Schema({
 	},
 });
 
+ReviewShema.index({ bootcamp: 1, user: 1 }, { unique: true });
+
 const Review = mongoose.model('Review', ReviewShema);
 
 export default Review;
