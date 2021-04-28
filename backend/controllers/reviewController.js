@@ -49,3 +49,50 @@ export const addReview = asyncHandler(async (req, res) => {
 
 	res.status(201).json({ success: true, data: review });
 });
+
+//@DESC Update Review
+//@ROUTE /api/v1/reviews/:id
+//@METHOD PUT
+export const updateReviews = asyncHandler(async (req, res) => {
+	let review = await Review.findById(req.params.id);
+
+	if (!review) {
+		res.status(404);
+		throw new Error('Review Not Found');
+	}
+
+	if (req.user.id !== review.user.toString() && req.user.role !== 'admin') {
+		res.status(404);
+		throw new Error('user role not authorize to update this review');
+	}
+
+	review = await Review.findByIdAndUpdate(req.params.id, req.body, {
+		new: true,
+		runValidators: true,
+	});
+
+	res.status(201).json({ success: true, data: review });
+});
+
+// @DESC Delete Review
+// @METHOD DELETE
+// @ROUTE /api/v1/reviews/:id
+export const deleteReview = asyncHandler(async (req, res, next) => {
+	let review = await Review.findById(req.params.id);
+
+	if (!review) {
+		res.status(404);
+		throw new Error(`Review Not Found`);
+	}
+
+	if (review.user.toString() !== req.user.id && req.user.role !== 'admin') {
+		res.status(401);
+		throw new Error('user role not authorize to delete this review');
+	}
+
+	console.log(review);
+
+	review = await Review.findByIdAndDelete(req.params.id);
+
+	res.status(200).json({ success: true, data: {} });
+});
