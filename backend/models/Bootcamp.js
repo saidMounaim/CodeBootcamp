@@ -60,10 +60,10 @@ const BootcampShema = new mongoose.Schema(
 			required: true,
 			enum: ['Web Development', 'Mobile Development', 'UI/UX', 'Data Science', 'Business', 'Other'],
 		},
-		averageRaiting: {
+		averageRating: {
 			type: Number,
-			minlength: [1, 'Raiting must be at least 1'],
-			maxlength: [10, 'Raiting can not be more than 10'],
+			minlength: [1, 'Rating must be at least 1'],
+			maxlength: [10, 'Rating can not be more than 10'],
 		},
 		averageCost: Number,
 		photo: {

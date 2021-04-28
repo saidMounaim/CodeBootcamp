@@ -9,12 +9,13 @@ import sendEmail from '../utils/SendEmail.js';
 //@ROUTE /api/v1/auth/register
 //@METHOD POST
 const register = asyncHandler(async (req, res) => {
-	const { name, email, password } = req.body;
+	const { name, email, password, role } = req.body;
 
 	const user = await User.create({
 		name,
 		email,
 		password,
+		role,
 	});
 
 	sendTokenToResponse(user, 201, res);
