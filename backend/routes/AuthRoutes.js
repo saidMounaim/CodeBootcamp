@@ -9,13 +9,15 @@ import {
 	resetPassword,
 	updateDetails,
 	updatePassword,
+	logout,
 } from '../controllers/AuthController.js';
 
 const router = express.Router();
 
 router.post('/register', register);
 router.post('/login', login);
-router.get('/me/', ProtectMiddleware, getMe);
+router.get('/me', ProtectMiddleware, getMe);
+router.get('/logout', logout);
 router.put('/updatedetails', ProtectMiddleware, updateDetails);
 router.put('/updatepassword', ProtectMiddleware, updatePassword);
 router.post('/forgotpassword', forgotPassword);

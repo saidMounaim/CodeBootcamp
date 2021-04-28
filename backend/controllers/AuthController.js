@@ -49,16 +49,23 @@ const login = asyncHandler(async (req, res) => {
 	sendTokenToResponse(user, 201, res);
 });
 
+//@DESC Logout User
+//@ROUTE /api/v1/auth/logout
+//@METHOD GET
+export const logout = asyncHandler(async (req, res) => {
+	res.cookie('Token', 'none', {
+		expires: new Date(Date.now() + 10 * 1000),
+		httpOnly: true,
+	});
+
+	res.status(201).json({ success: true, data: {} });
+});
+
 //@DESC Get logged User
 //@ROUTE /api/v1/auth/me
 //@METHOD GET
 const getMe = asyncHandler(async (req, res) => {
-	const user = await User.findById(req.user._id);
-
-	if (!user) {
-		res.status(404);
-		throw new Error('User not found');
-	}
+	const user = req.user;
 
 	res.status(201).json({ success: true, data: user });
 });
