@@ -2,6 +2,8 @@ import express from 'express';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
 import mongoSanitize from 'express-mongo-sanitize';
+import helmet from 'helmet';
+import xss from 'xss-clean';
 import connectDB from './config/db.js';
 import { errorHandler, notFound } from './middleware/ErrorMiddleware.js';
 import fileUpload from 'express-fileupload';
@@ -34,6 +36,10 @@ app.use(cookieParser());
 app.use(fileUpload());
 
 app.use(mongoSanitize());
+
+app.use(helmet());
+
+app.use(xss());
 
 app.get('/', (req, res) => {
 	res.status(200).json({ message: 'Welcome To Backend Dev Bootcamp' });
