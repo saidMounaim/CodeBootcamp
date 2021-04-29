@@ -4,6 +4,9 @@ import morgan from 'morgan';
 import mongoSanitize from 'express-mongo-sanitize';
 import helmet from 'helmet';
 import xss from 'xss-clean';
+import hpp from 'hpp';
+import rateLimit from 'express-rate-limit';
+import cors from 'cors';
 import connectDB from './config/db.js';
 import { errorHandler, notFound } from './middleware/ErrorMiddleware.js';
 import fileUpload from 'express-fileupload';
@@ -40,6 +43,18 @@ app.use(mongoSanitize());
 app.use(helmet());
 
 app.use(xss());
+
+app.use(hpp());
+
+app.use(cors());
+
+const limiter = rateLimit({
+	windowMs: 15 * 60 * 1000,
+	max: 100,
+});
+
+//  apply to all requests
+app.use(limiter);
 
 app.get('/', (req, res) => {
 	res.status(200).json({ message: 'Welcome To Backend Dev Bootcamp' });
